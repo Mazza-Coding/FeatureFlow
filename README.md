@@ -1,5 +1,7 @@
 # FeatureFlow
 
+![CI](https://github.com/YOUR_USERNAME/featureflow/actions/workflows/ci.yml/badge.svg)
+
 A simple tool for dev teams to manage feature requests. Built this because we needed a better way to track what features are being proposed, discussed, and worked on.
 
 ## What it does
@@ -13,6 +15,7 @@ A simple tool for dev teams to manage feature requests. Built this because we ne
 ## Project structure
 
 ```
+├── .github/workflows/  # CI/CD pipelines
 ├── django_project/     # Django config (settings, urls)
 ├── features/           # API app (models, views, serializers)
 ├── frontend/           # React app
@@ -83,6 +86,13 @@ python manage.py test features
 # Frontend
 cd frontend && npm test
 ```
+
+## CI/CD
+
+GitHub Actions runs on every push and PR to `main`:
+
+- **CI** ([ci.yml](.github/workflows/ci.yml)) — runs backend tests, frontend tests, and builds the frontend
+- **Deploy** ([deploy.yml](.github/workflows/deploy.yml)) — builds artifacts ready for deployment (configure your own target)
 
 ## License
 
