@@ -1,7 +1,5 @@
 # FeatureFlow
 
-![CI](https://github.com/YOUR_USERNAME/featureflow/actions/workflows/ci.yml/badge.svg)
-
 A simple tool for dev teams to manage feature requests. Built this because we needed a better way to track what features are being proposed, discussed, and worked on.
 
 ## What it does
