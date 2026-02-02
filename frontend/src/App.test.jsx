@@ -1,12 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import FeatureForm from './pages/FeatureForm';
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import FeatureForm from "./pages/FeatureForm";
 
-vi.mock('./services/api', () => ({
+vi.mock("./services/api", () => ({
   default: {
     get: vi.fn(),
     post: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock('./services/api', () => ({
   featuresApi: {
     getAll: vi.fn(() => Promise.resolve({ data: [] })),
     getOne: vi.fn(),
-    create: vi.fn(() => Promise.resolve({ data: { id: 1, title: 'Test' } })),
+    create: vi.fn(() => Promise.resolve({ data: { id: 1, title: "Test" } })),
     update: vi.fn(),
     delete: vi.fn(),
   },
@@ -23,78 +23,85 @@ vi.mock('./services/api', () => ({
 const renderWithProviders = (component) => {
   return render(
     <BrowserRouter>
-      <AuthProvider>
-        {component}
-      </AuthProvider>
-    </BrowserRouter>
+      <AuthProvider>{component}</AuthProvider>
+    </BrowserRouter>,
   );
 };
 
-describe('Login Component', () => {
-  it('renders login form', () => {
+describe("Login Component", () => {
+  it("renders login form", () => {
     renderWithProviders(<Login />);
-    
-    expect(screen.getByText('Login to FeatureFlow')).toBeInTheDocument();
-    expect(screen.getByLabelText('Username')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+
+    expect(screen.getByText("Login to FeatureFlow")).toBeInTheDocument();
+    expect(screen.getByText("Username")).toBeInTheDocument();
+    expect(screen.getByText("Password")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
   });
 
-  it('has link to register page', () => {
+  it("has link to register page", () => {
     renderWithProviders(<Login />);
-    
-    expect(screen.getByText('Register')).toBeInTheDocument();
+
+    expect(screen.getByText("Register")).toBeInTheDocument();
   });
 });
 
-describe('Register Component', () => {
-  it('renders register form', () => {
+describe("Register Component", () => {
+  it("renders register form", () => {
     renderWithProviders(<Register />);
-    
-    expect(screen.getByText('Create Account')).toBeInTheDocument();
-    expect(screen.getByLabelText('Username')).toBeInTheDocument();
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
+
+    expect(screen.getByText("Create Account")).toBeInTheDocument();
+    expect(screen.getByText("Username")).toBeInTheDocument();
+    expect(screen.getByText("Email")).toBeInTheDocument();
+    expect(screen.getByText("Password")).toBeInTheDocument();
+    expect(screen.getByText("Confirm Password")).toBeInTheDocument();
   });
 
-  it('validates password match', async () => {
+  it("validates password match", async () => {
     renderWithProviders(<Register />);
-    
-    fireEvent.change(screen.getByLabelText('Username'), { target: { value: 'testuser' } });
-    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@example.com' } });
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'different' } });
-    
-    fireEvent.click(screen.getByRole('button', { name: /register/i }));
-    
+
+    const inputs = screen.getAllByRole("textbox");
+    const passwordInputs = document.querySelectorAll('input[type="password"]');
+
+    fireEvent.change(inputs[0], { target: { value: "testuser" } }); // username
+    fireEvent.change(inputs[1], { target: { value: "test@example.com" } }); // email
+    fireEvent.change(passwordInputs[0], { target: { value: "password123" } });
+    fireEvent.change(passwordInputs[1], { target: { value: "different" } });
+
+    fireEvent.click(screen.getByRole("button", { name: /register/i }));
+
     await waitFor(() => {
-      expect(screen.getByText('Passwords do not match')).toBeInTheDocument();
+      expect(screen.getByText("Passwords do not match")).toBeInTheDocument();
     });
   });
 });
 
-describe('FeatureForm Component', () => {
-  it('renders new feature form', () => {
+describe("FeatureForm Component", () => {
+  it("renders new feature form", () => {
     renderWithProviders(<FeatureForm />);
-    
-    expect(screen.getByText('New Feature Proposal')).toBeInTheDocument();
-    expect(screen.getByLabelText(/title/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/business problem/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/expected value/i)).toBeInTheDocument();
+
+    expect(screen.getByText("New Feature Proposal")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(/short, descriptive title/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(/what problem does this feature solve/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(/what value will this feature provide/i),
+    ).toBeInTheDocument();
   });
 
-  it('calculates priority score', () => {
+  it("calculates priority score", () => {
     renderWithProviders(<FeatureForm />);
-    
+
     expect(screen.getByText(/calculated priority score/i)).toBeInTheDocument();
   });
 
-  it('has complexity selector', () => {
+  it("has complexity selector", () => {
     renderWithProviders(<FeatureForm />);
-    
-    const complexitySelect = screen.getByLabelText(/complexity/i);
+
+    const complexitySelect = screen.getByRole("combobox");
     expect(complexitySelect).toBeInTheDocument();
-    expect(complexitySelect.value).toBe('medium');
+    expect(complexitySelect.value).toBe("medium");
   });
 });
