@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import { featuresApi } from '../services/api';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { featuresApi } from "../services/api";
+import { useToast } from "../context/ToastContext";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const FeatureForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
   const isEditing = Boolean(id);
 
   const [formData, setFormData] = useState({
-    title: '',
-    business_problem: '',
-    expected_value: '',
-    affected_users: '',
-    complexity: 'medium',
+    title: "",
+    business_problem: "",
+    expected_value: "",
+    affected_users: "",
+    complexity: "medium",
     business_value: 5,
     effort: 5,
     risk: 5,
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [initialLoading, setInitialLoading] = useState(isEditing);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (isEditing) {
@@ -29,11 +33,32 @@ const FeatureForm = () => {
   const fetchFeature = async () => {
     try {
       const response = await featuresApi.getOne(id);
-      const { title, business_problem, expected_value, affected_users, complexity, business_value, effort, risk } = response.data;
-      setFormData({ title, business_problem, expected_value, affected_users, complexity, business_value, effort, risk });
-    } catch (error) {
-      console.error('Failed to fetch feature:', error);
-      navigate('/');
+      const {
+        title,
+        business_problem,
+        expected_value,
+        affected_users,
+        complexity,
+        business_value,
+        effort,
+        risk,
+      } = response.data;
+      setFormData({
+        title,
+        business_problem,
+        expected_value,
+        affected_users,
+        complexity,
+        business_value,
+        effort,
+        risk,
+      });
+    } catch (err) {
+      toast.error("Failed to load feature");
+      console.error("Failed to fetch feature:", err);
+      navigate("/");
+    } finally {
+      setInitialLoading(false);
     }
   };
 
@@ -41,49 +66,65 @@ const FeatureForm = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: ['business_value', 'effort', 'risk'].includes(name) ? parseInt(value) : value,
+      [name]: ["business_value", "effort", "risk"].includes(name)
+        ? parseInt(value)
+        : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       if (isEditing) {
         await featuresApi.update(id, formData);
+        toast.success("Feature updated successfully");
       } else {
         await featuresApi.create(formData);
+        toast.success("Feature created successfully");
       }
-      navigate('/');
+      navigate("/");
     } catch (err) {
       const errors = err.response?.data;
       if (errors) {
         const firstError = Object.values(errors)[0];
         setError(Array.isArray(firstError) ? firstError[0] : firstError);
       } else {
-        setError('Failed to save feature');
+        setError("Failed to save feature");
       }
+      toast.error("Failed to save feature");
     } finally {
       setLoading(false);
     }
   };
 
-  const priorityScore = ((formData.business_value * 2 - formData.effort - formData.risk) / 2).toFixed(1);
+  const priorityScore = (
+    (formData.business_value * 2 - formData.effort - formData.risk) /
+    2
+  ).toFixed(1);
+
+  if (initialLoading) {
+    return <LoadingSpinner text="Loading feature..." />;
+  }
 
   return (
-    <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <Link to="/" style={{ color: '#6b7280', textDecoration: 'none' }}>
-          &larr; Back to Features
-        </Link>
-      </div>
+    <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+      <Link to="/" className="back-link">
+        ← Back to Features
+      </Link>
 
       <div className="card">
-        <h2 style={{ marginBottom: '24px' }}>{isEditing ? 'Edit Feature' : 'New Feature Proposal'}</h2>
+        <h2 style={{ marginBottom: "24px" }}>
+          {isEditing ? "Edit Feature" : "New Feature Proposal"}
+        </h2>
 
-        {error && <div className="error-message" style={{ marginBottom: '16px' }}>{error}</div>}
+        {error && (
+          <div className="error-message" style={{ marginBottom: "16px" }}>
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -133,14 +174,25 @@ const FeatureForm = () => {
 
           <div className="form-group">
             <label>Complexity</label>
-            <select name="complexity" value={formData.complexity} onChange={handleChange}>
+            <select
+              name="complexity"
+              value={formData.complexity}
+              onChange={handleChange}
+            >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '16px' }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "16px",
+              marginBottom: "16px",
+            }}
+          >
             <div className="form-group">
               <label>Business Value (1-10)</label>
               <input
@@ -151,7 +203,15 @@ const FeatureForm = () => {
                 value={formData.business_value}
                 onChange={handleChange}
               />
-              <div style={{ textAlign: 'center', fontWeight: '600', color: '#10b981' }}>{formData.business_value}</div>
+              <div
+                style={{
+                  textAlign: "center",
+                  fontWeight: "600",
+                  color: "#10b981",
+                }}
+              >
+                {formData.business_value}
+              </div>
             </div>
 
             <div className="form-group">
@@ -164,7 +224,15 @@ const FeatureForm = () => {
                 value={formData.effort}
                 onChange={handleChange}
               />
-              <div style={{ textAlign: 'center', fontWeight: '600', color: '#f59e0b' }}>{formData.effort}</div>
+              <div
+                style={{
+                  textAlign: "center",
+                  fontWeight: "600",
+                  color: "#f59e0b",
+                }}
+              >
+                {formData.effort}
+              </div>
             </div>
 
             <div className="form-group">
@@ -177,18 +245,49 @@ const FeatureForm = () => {
                 value={formData.risk}
                 onChange={handleChange}
               />
-              <div style={{ textAlign: 'center', fontWeight: '600', color: '#ef4444' }}>{formData.risk}</div>
+              <div
+                style={{
+                  textAlign: "center",
+                  fontWeight: "600",
+                  color: "#ef4444",
+                }}
+              >
+                {formData.risk}
+              </div>
             </div>
           </div>
 
-          <div className="card" style={{ textAlign: 'center', marginBottom: '24px', background: '#f3f4f6' }}>
-            <div style={{ fontSize: '14px', color: '#6b7280', marginBottom: '4px' }}>Calculated Priority Score</div>
+          <div
+            className="card"
+            style={{
+              textAlign: "center",
+              marginBottom: "24px",
+              background: "#f3f4f6",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "14px",
+                color: "#6b7280",
+                marginBottom: "4px",
+              }}
+            >
+              Calculated Priority Score
+            </div>
             <span className="priority-score">{priorityScore}</span>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Saving...' : isEditing ? 'Update Feature' : 'Create Feature'}
+          <div style={{ display: "flex", gap: "12px" }}>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading
+                ? "Saving..."
+                : isEditing
+                  ? "Update Feature"
+                  : "Create Feature"}
             </button>
             <Link to="/" className="btn btn-secondary">
               Cancel

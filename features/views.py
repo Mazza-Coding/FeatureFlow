@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status, permissions
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action, api_view, permission_classes, throttle_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -9,10 +9,21 @@ from .serializers import (
     FeatureListSerializer, FeatureDetailSerializer, CommentSerializer,
     StatusChangeSerializer, ActivitySerializer, UserSerializer, RegisterSerializer
 )
+from .throttling import AuthRateThrottle
+
+
+STATUS_TRANSITIONS = {
+    'proposed': ['under_discussion', 'approved'],
+    'under_discussion': ['proposed', 'approved', 'in_progress'],
+    'approved': ['in_progress', 'under_discussion'],
+    'in_progress': ['done', 'approved'],
+    'done': ['in_progress'],  # Allow reopening
+}
 
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@throttle_classes([AuthRateThrottle])
 def register(request):
     serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
@@ -81,6 +92,15 @@ class FeatureViewSet(viewsets.ModelViewSet):
             )
         
         old_status = feature.status
+        
+        # Validate status transition
+        allowed_transitions = STATUS_TRANSITIONS.get(old_status, [])
+        if new_status not in allowed_transitions and new_status != old_status:
+            return Response(
+                {'error': f'Cannot transition from "{old_status}" to "{new_status}". Allowed: {allowed_transitions}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
         StatusChange.objects.create(
             feature=feature,
             changed_by=request.user,
