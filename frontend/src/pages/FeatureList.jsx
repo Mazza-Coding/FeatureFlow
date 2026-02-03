@@ -167,13 +167,3 @@ const FeatureList = () => {
 };
 
 export default FeatureList;
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default FeatureList;

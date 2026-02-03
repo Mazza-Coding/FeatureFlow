@@ -796,3 +796,435 @@ body {
 .transitions-info strong {
   color: #374151;
 }
+
+/* ==========================================
+   RESPONSIVE STYLES
+   ========================================== */
+
+/* Tablet and below (max-width: 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  /* Header */
+  .header {
+    padding: 12px 0;
+  }
+
+  .header-content {
+    padding: 0 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .header nav {
+    gap: 12px;
+  }
+
+  .header nav a,
+  .header nav button {
+    font-size: 14px;
+  }
+
+  /* Feature List */
+  .feature-list-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .feature-list-header h2 {
+    text-align: center;
+  }
+
+  .feature-list-header .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Filter Bar */
+  .filter-bar {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .filter-group label {
+    margin-bottom: 4px;
+  }
+
+  .filter-group select,
+  .search-input-container {
+    width: 100%;
+  }
+
+  /* Stats Counter */
+  .stat-counter {
+    justify-content: space-around;
+    gap: 16px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  /* Grid */
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Feature Detail */
+  .feature-detail-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .feature-detail-title {
+    font-size: 22px;
+  }
+
+  .feature-detail-meta {
+    flex-wrap: wrap;
+  }
+
+  .feature-actions {
+    flex-wrap: wrap;
+  }
+
+  .feature-actions .btn {
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+  }
+
+  /* Metrics Grid */
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Tabs */
+  .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-button {
+    padding: 10px 16px;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  /* Modal */
+  .modal-content {
+    margin: 16px;
+    padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+  }
+
+  /* Toast */
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: 16px;
+  }
+
+  .toast {
+    min-width: auto;
+    max-width: none;
+  }
+
+  /* Comment Thread */
+  .comment-form {
+    flex-direction: column;
+  }
+
+  .comment-form select,
+  .comment-form input,
+  .comment-form .btn {
+    width: 100%;
+  }
+
+  /* Cards */
+  .card {
+    padding: 16px;
+  }
+
+  /* Priority Score */
+  .priority-score {
+    font-size: 16px;
+    padding: 6px 12px;
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  /* Back Link */
+  .back-link {
+    margin-bottom: 16px;
+  }
+}
+
+/* Mobile phones (max-width: 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+
+  .header-content {
+    justify-content: center;
+  }
+
+  .header h1 {
+    font-size: 18px;
+  }
+
+  .header nav {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Feature Card */
+  .feature-card {
+    padding: 14px;
+  }
+
+  .feature-card-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .feature-card-title {
+    font-size: 16px;
+  }
+
+  .feature-card-badges {
+    width: 100%;
+  }
+
+  .feature-card-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Stats */
+  .stat-counter {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-item {
+    min-width: 70px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  /* Feature Detail */
+  .feature-detail-title {
+    font-size: 20px;
+  }
+
+  .feature-detail-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .feature-section h3 {
+    font-size: 16px;
+  }
+
+  /* Metric Cards */
+  .metric-card {
+    padding: 12px;
+  }
+
+  .metric-value {
+    font-size: 20px;
+  }
+
+  /* Comments */
+  .comment-item {
+    flex-direction: column;
+  }
+
+  .comment-avatar {
+    align-self: flex-start;
+  }
+
+  /* Activity Timeline */
+  .activity-item {
+    flex-direction: column;
+  }
+
+  .activity-icon {
+    align-self: flex-start;
+  }
+
+  /* Empty State */
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  .empty-state-icon {
+    font-size: 36px;
+  }
+
+  .empty-state-title {
+    font-size: 18px;
+  }
+
+  /* Form */
+  .form-group label {
+    font-size: 14px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  /* Transitions Info */
+  .transitions-info {
+    font-size: 12px;
+  }
+
+  /* Error Banner */
+  .error-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .error-banner-retry {
+    width: 100%;
+  }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .filter-group select {
+    min-height: 44px;
+  }
+
+  .tab-button {
+    min-height: 44px;
+  }
+
+  .feature-card {
+    cursor: default;
+  }
+
+  .feature-card:active {
+    transform: scale(0.98);
+  }
+
+  .toast-close {
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+  }
+
+  .search-input-clear {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Landscape phones */
+@media (max-width: 768px) and (orientation: landscape) {
+  .modal-content {
+    max-height: 85vh;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .card {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .feature-card:hover {
+    transform: none;
+  }
+
+  .spinner {
+    animation: none;
+    border-top-color: #4f46e5;
+    border-right-color: #4f46e5;
+    border-bottom-color: #4f46e5;
+  }
+}
+
+/* Print styles */
+@media print {
+  .header,
+  .filter-bar,
+  .feature-actions,
+  .tabs,
+  .btn,
+  .toast-container {
+    display: none !important;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+}
